@@ -6,6 +6,8 @@
 
 const std::regex ANY_REGEX = std::regex("^.*$");
 const std::regex SIMPLE_SENTENCE_REGEX = std::regex("^[.,&!?\()\\/';:A-Za-z -]+$");
+const std::regex TEMPERATURE_REGEX = std::regex("^\\d+.*\\d+$");
+const std::regex C_OR_F_REGEX = std::regex("^C|F|c|f$");
 const std::regex DIFFICULTY_LEVEL_REGEX = std::regex("^1|2|3$");
 const std::regex PLAY_AGAIN_REGEX = std::regex("^Y|N$");
 const std::regex ANY_LENGTH_NUMBER_REGEX = std::regex("^\\d+$");
@@ -81,12 +83,54 @@ Separator with(std::string value) {
   return Separator(value);
 }
 
-void run_primer_1() {
+void practice_exercise_1() {
   const std::string quote = read_quote();
   const std::string author = read_author();
 
   print_empty_line();
   print(concat(with(" "), author, "says:", concat(Separator::EMPTY, "\"", quote, "\"")));
+}
+
+std::string read_starting_temperature() {
+  return read_regex_matching_string_with_prompt("Please enter the starting temperature:", TEMPERATURE_REGEX);
+}
+
+std::string read_temperature_conversion_choice() {
+  return read_regex_matching_string_with_prompt("Your choice:", C_OR_F_REGEX);
+}
+
+float fahrenheit_to_centigrade(const float fahrenheit) {
+  return (fahrenheit - 32.0f) * (5.0f / 9.0f);
+}
+
+float centigrade_to_fahrenheit(const float centigrade) {
+  return (centigrade * (9.0f / 5.0f)) + 32.0f;
+}
+
+void practice_exercise_2() {
+  const std::string starting_temperature = read_starting_temperature();
+
+  print("Press 'C' to convert from Fahrenheit to Centigrade.");
+  print("Press 'F' to convert from Centigrade to Fahrenheit.");
+
+  print_empty_line();
+  const std::string choice = read_temperature_conversion_choice();
+
+  if (choice == "C") {
+    print(concat(with(" "),
+      starting_temperature,
+      "degrees Fahrenheit is",
+      std::to_string(fahrenheit_to_centigrade(std::stof(starting_temperature)))));
+  } else {
+    print(concat(with(" "),
+      starting_temperature,
+      "degrees Centigrade is",
+      std::to_string(centigrade_to_fahrenheit(std::stof(starting_temperature)))));
+  }
+}
+
+void run_primer_1() {
+  practice_exercise_1();
 }
 
 std::string read_difficulty_level() {
@@ -235,9 +279,10 @@ void run_primer_3() {
 }
 
 int main() {
-  run_primer_1();
-  run_primer_2();
-  run_primer_3();
+  // run_primer_1();
+  // run_primer_2();
+  // run_primer_3();
+  practice_exercise_2();
 
   return 0;
 }
