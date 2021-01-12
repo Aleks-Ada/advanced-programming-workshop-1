@@ -13,6 +13,8 @@ const std::regex PLAY_AGAIN_REGEX = std::regex("^Y|N$");
 const std::regex ANY_LENGTH_NUMBER_REGEX = std::regex("^\\d+$");
 const std::regex COST_REGEX = std::regex("^\\d+.\\d{2}$");
 const std::regex NUMBER_REGEX = std::regex("\\d+");
+const std::regex NUMERIC_REGEX = std::regex("\\d");
+const std::regex ALPHABETIC_REGEX = std::regex("[A-Za-z]");
 
 void print(const std::string& output, const std::string& end_with = "\n") {
   std::cout << output << end_with;
@@ -278,11 +280,256 @@ void run_primer_3() {
   print(concat(Separator::EMPTY, "Total: £", pence_to_pound_string(total_cost_pence + shopping_tax)));
 }
 
+std::string read_word() {
+  return read_regex_matching_string_with_prompt("Please enter a word:", ANY_REGEX);
+}
+
+std::string reverse(const std::string& word) {
+  std::string reverse;
+
+  for (auto current = word.end(); current >= word.begin(); --current) {
+    reverse += *current;
+  }
+
+  return reverse;
+}
+
+void reverse_word() {
+  const std::string word = read_word();
+  print(concat(with(" "),
+    word,
+    "spelt backwards is:",
+    reverse(word)));
+}
+
+std::string to_lowercase(const std::string& word) {
+  std::string lowercase;
+
+  for (auto current = word.begin(); current < word.end(); ++current) {
+    lowercase += std::tolower(*current);
+  }
+
+  return lowercase;
+}
+
+void convert_lower_case() {
+  const std::string word = read_word();
+  print(concat(with(" "),
+    word,
+    "converted to lower case is:",
+    to_lowercase(word)));
+}
+
+bool is_palindrome(const std::string& word) {
+  for (auto from_start = word.begin(),
+            from_end = word.end() - 1;
+       from_end > from_start;
+       ++from_start, --from_end) {
+    if ((*from_start) != (*from_end)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+void palindrome_checker() {
+  const std::string word = read_word();
+
+  if (is_palindrome(to_lowercase(word))) {
+    print(concat(Separator::EMPTY,
+      "Yes, '",
+      word,
+      "' is a palindrome"));
+  } else {
+    print(concat(Separator::EMPTY,
+      "Sorry, '",
+      word,
+      "' is not a palindrome"));
+  }
+}
+
+std::string read_username() {
+  return read_string_with_prompt("Username:");
+}
+
+std::string read_password() {
+  return read_string_with_prompt("Password:");
+}
+
+struct User {
+  User(const std::string& username, const std::string& password, const std::string& name) : username(username), password(password), name(name) {}
+  std::string username;
+  std::string password;
+  std::string name;
+};
+
+void insert(std::map<std::string, User>& map, const User& user) {
+  map.insert(std::make_pair(user.username, user));
+}
+
+const std::map<std::string, User>& read_credentials() {
+  static std::map<std::string, User> credentials;
+
+  if (credentials.size() == 0) {
+    insert(credentials, User{ "mike@ada.ac", "AdaRocks", "Mike" });
+  }
+
+  return credentials;
+}
+
+bool authenticates(const std::string& username, const std::string& password) {
+  auto user_search = read_credentials().find(username);
+
+  if (user_search == read_credentials().end()) {
+    return false;
+  }
+
+  return user_search->second.password == password;
+}
+
+std::string get_name(const std::string& username) {
+  return read_credentials().find(username)->second.name;
+}
+
+void run_primer_4() {
+  const std::string username = read_username();
+  const std::string password = read_password();
+
+  print_empty_line();
+
+  if (authenticates(username, password)) {
+    print(concat(with(" "),
+      "Welcome",
+      get_name(username)));
+  } else {
+    print("Failed to authenticate");
+  }
+}
+
+enum PasswordStrength {
+  Weak,
+  Moderate,
+  Strong,
+  VeryStrong
+};
+
+PasswordStrength test_strength(const std::string& password) {
+  int numeric = 0;
+  int alphabetic = 0;
+  int special = 0;
+
+  for (const char c : password) {
+    std::string string(1, c);
+
+    if (matches_regex(string, NUMERIC_REGEX)) {
+      ++numeric;
+    } else if (matches_regex(string, ALPHABETIC_REGEX)) {
+      ++alphabetic;
+    } else {
+      ++special;
+    }
+  }
+
+  if (password.size() >= 8 &&
+      numeric >= 2 &&
+      alphabetic >= 4 &&
+      special >= 1) {
+    return VeryStrong;
+  } else if (password.size() >= 8 &&
+             numeric >= 2 &&
+             alphabetic >= 4) {
+    return Strong;
+  } else if ((numeric > 0 && alphabetic == 0 && special == 0) ||
+    (alphabetic > 0 && numeric == 0 && special == 0)) {
+    return Weak;
+  } else {
+    return Moderate;
+  }
+}
+
+#define START_ENUM_SWITCH(value) switch (value) {
+#define MAP(value, name) case value: return "" #name "";
+#define END_ENUM_SWITCH }
+
+std::string strength_to_string(const PasswordStrength strength) {
+  START_ENUM_SWITCH(strength)
+    MAP(Weak, weak)
+    MAP(Moderate, moderate)
+    MAP(Strong, strong)
+    MAP(VeryStrong, very strong)
+  END_ENUM_SWITCH
+}
+
+void print_password_security(const std::string& password) {
+  print(concat(Separator::EMPTY,
+    "The password '",
+    password,
+    "' is ",
+    strength_to_string(test_strength(password))));
+}
+
+void run_primer_5() {
+  print_password_security("12345678");
+  print_password_security("AB235");
+  print_password_security("Password2021");
+  print_password_security("Password2021!");
+}
+
+void print_names(const std::string* names, const int size) {
+  for (int index = 0; index < size; ++index) {
+    print(*(names + index));
+  }
+}
+
+std::string read_name_to_remove() {
+  return read_string_with_prompt("Enter an employee name to remove:");
+}
+
+void print_names_excluding(const std::string* names, const int size, const std::string& excluding) {
+  for (int index = 0; index < size; ++index) {
+    const std::string& name = *(names + index);
+
+    if (name != excluding) {
+      print(name);
+    }
+  }
+}
+
+void run_primer_6() {
+  static constexpr int size_of_names = 5;
+  const std::string names[size_of_names] = {
+    "John Smith",
+    "Jaelynn Stuart",
+    "Kaley Barajas",
+    "Walter Collier",
+    "Cale Myers"
+  };
+
+  print(concat(with(" "),
+    "There are",
+    std::to_string(size_of_names),
+    "employees:"));
+  print_names(names, size_of_names);
+  print_empty_line();
+
+  const std::string name_to_remove = read_name_to_remove();
+
+  print_empty_line();
+  print(concat(with(" "),
+    "There are",
+    std::to_string(size_of_names - 1),
+    "employees:"));
+  print_names_excluding(names, size_of_names, name_to_remove);
+}
+
 int main() {
   // run_primer_1();
   // run_primer_2();
   // run_primer_3();
-  practice_exercise_2();
+  // run_primer_4();
+  // run_primer_5();
+  // run_primer_6();
 
   return 0;
 }
