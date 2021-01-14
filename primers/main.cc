@@ -31,7 +31,7 @@ int main()  {
   // run_primer_3();
 
   // run_primer_10();
-  run_primer_11();
+  // run_primer_11();
   run_primer_12();
 
   return 0;
