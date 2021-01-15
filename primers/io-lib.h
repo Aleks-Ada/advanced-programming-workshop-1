@@ -2,9 +2,10 @@
 #define IO_LIB_H
 
 #include <string>
+#include <string_view>
 #include <regex>
 
-void print(const std::string& output, const std::string& end_with = "\n");
+void print(std::string_view output, std::string_view end_with = "\n");
 void print_empty_line();
 
 bool matches_regex(const std::string& target, const std::regex& regex);
@@ -21,7 +22,8 @@ struct Separator {
 Separator with(const std::string& value);
 
 namespace iolib {
-static const Separator with_space{ " " };
+inline const Separator no_separator{ "" };
+inline const Separator with_space{ " " };
 } // namespace iolib
 
 template<typename ...TArgs>

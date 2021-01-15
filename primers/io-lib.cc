@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void print(const std::string& output, const std::string& end_with) {
+void print(const std::string_view output, const std::string_view end_with) {
   std::cout << output << end_with;
 }
 
