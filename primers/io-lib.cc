@@ -39,5 +39,3 @@ std::string read_regex_matching_string_with_prompt(const std::string& prompt, co
 Separator with(const std::string& value) {
   return Separator{ value };
 }
-
-const Separator Separator::EMPTY{ "" };

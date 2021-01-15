@@ -16,8 +16,6 @@ std::string read_regex_matching_string_with_prompt(const std::string& prompt, co
 
 struct Separator {
   std::string value;
-
-  static const Separator EMPTY;
 };
 Separator with(const std::string& value);
 

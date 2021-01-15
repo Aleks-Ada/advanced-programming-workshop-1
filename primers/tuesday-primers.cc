@@ -92,7 +92,7 @@ std::string strength_to_string(const PasswordStrength strength) {
 }
 
 void print_password_security(const std::string& password) {
-  print(concat(Separator::EMPTY,
+  print(concat(iolib::no_separator,
                "The password '",
                password,
                "' is ",

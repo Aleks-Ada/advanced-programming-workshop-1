@@ -4,7 +4,6 @@
 #include <thread>
 #include <string>
 #include <sstream>
-#include <iostream>
 
 #include "io-lib.h"
 
@@ -27,14 +26,14 @@ std::string current_thread_id() {
 }
 
 void thread_function(const int id, const int sleep) {
-  print(concat(Separator::EMPTY,
+  print(concat(iolib::no_separator,
     "Thread ",
     std::to_string(id),
     ": ",
     current_thread_id(),
     " started"));
   block_execution(sleep);
-  print(concat(Separator::EMPTY,
+  print(concat(iolib::no_separator,
     "Thread ",
     std::to_string(id),
     ": ",
@@ -116,7 +115,8 @@ void run_primer_12() {
   // 9. Thread 1 and 2 may or may not have printed their exit
   //    messages - this entirely depends on whether they had
   //    time to do so whilst the main thread was running.
-  // 10. The main thread of the program exits, which causes
+  // 10. [Assuming this is in the main function]
+  //     The main thread of the program exits, which causes
   //     the operating system to release all resources used
   //     by the program, including any threads, which means
   //     threads 1 and 2 are stopped regardless of whether

@@ -10,7 +10,6 @@ const std::regex SIMPLE_SENTENCE_REGEX = std::regex("^[.,&!?\\()\\/';:A-Za-z -]+
 const std::regex NUMBER_REGEX = std::regex("\\d+");
 const std::regex NUMERIC_REGEX = std::regex("\\d");
 const std::regex ALPHABETIC_REGEX = std::regex("[A-Za-z]");
-const std::regex YES_NO_REGEX = std::regex("^Y|N|y|n$");
 
 std::string read_quote() {
   return read_regex_matching_string_with_prompt("What is the quote?", SIMPLE_SENTENCE_REGEX);
@@ -25,7 +24,7 @@ void practice_exercise_1() {
   const std::string author = read_author();
 
   print_empty_line();
-  print(concat(with(" "), author, "says:", concat(Separator::EMPTY, "\"", quote, "\"")));
+  print(concat(with(" "), author, "says:", concat(iolib::no_separator, "\"", quote, "\"")));
 }
 
 void run_primer_1() {
@@ -93,8 +92,17 @@ void run_primer_2() {
     }
 
     print_empty_line();
+    if (total_guesses == 1) {
+      print("Wow, you are a mind reader!");
+    } else if (total_guesses < 4) {
+      print("Well done, most impressive!");
+    } else if (total_guesses < 7) {
+      print("Good, but I am sure you can do better!");
+    } else {
+      print("Better luck next time!");
+    }
     print(concat(with(" "),
-      "Well done, the number was",
+      "The number was",
       std::to_string(target_random_number),
       "- you got it in",
       std::to_string(total_guesses),
@@ -110,21 +118,17 @@ void run_primer_2() {
 }
 
 std::string read_quantity(const std::string& item_string) {
-  const std::regex ANY_LENGTH_NUMBER_REGEX = std::regex("^\\d+$");
   return read_regex_matching_string_with_prompt(concat(with(" "),
     "Please enter a quantity for item",
     item_string,
-    "(or 0 to finish):"),
-    ANY_LENGTH_NUMBER_REGEX);
+    "(or 0 to finish):"), std::regex("^\\d+$"));
 }
 
 std::string read_cost(const std::string& item_string) {
-  const std::regex COST_REGEX = std::regex("^\\d+.\\d{2}$");
   return read_regex_matching_string_with_prompt(concat(with(" "),
     "Please enter item",
     item_string,
-    "cost:"),
-    COST_REGEX);
+    "cost:"), std::regex("^\\d+.\\d{2}$"));
 }
 
 int char_to_int(const char c) {
@@ -138,10 +142,10 @@ std::string pence_to_pound_string(const int pence) {
   std::string remainder_pence_string = std::to_string(remainder_pence);
 
   if (remainder_pence_string.size() == 1) {
-    remainder_pence_string += "0";
+    remainder_pence_string = "0" + remainder_pence_string;
   }
 
-  return concat(Separator::EMPTY,
+  return concat(iolib::no_separator,
     std::to_string(pounds),
     ".",
     remainder_pence_string);
@@ -173,8 +177,9 @@ void run_primer_3() {
 
   print("Thank you.");
   print_empty_line();
-  print(concat(Separator::EMPTY, "Subtotal: £", pence_to_pound_string(total_cost_pence)));
-  print(concat(Separator::EMPTY, "Shopping Tax: £", pence_to_pound_string(shopping_tax)));
+  print(concat(iolib::no_separator, "Subtotal: £", pence_to_pound_string(total_cost_pence)));
+  print(concat(iolib::no_separator, "Shopping Tax: £", pence_to_pound_string(shopping_tax)));
   print_empty_line();
-  print(concat(Separator::EMPTY, "Total: £", pence_to_pound_string(total_cost_pence + shopping_tax)));
+  print(concat(iolib::no_separator, "Total: £",
+               pence_to_pound_string(total_cost_pence + shopping_tax)));
 }

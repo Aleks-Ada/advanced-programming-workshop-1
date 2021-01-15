@@ -10,19 +10,13 @@
 #include "credentials-lib.h"
 #include "random.h"
 
-const std::regex SIMPLE_SENTENCE_REGEX = std::regex("^[.,&!?\\()\\/';:A-Za-z -]+$");
-const std::regex NUMBER_REGEX = std::regex("\\d+");
-const std::regex NUMERIC_REGEX = std::regex("\\d");
-const std::regex ALPHABETIC_REGEX = std::regex("[A-Za-z]");
-const std::regex YES_NO_REGEX = std::regex("^Y|N|y|n$");
-
 std::vector<std::string> read_file(const std::string& name) {
   std::vector<std::string> lines;
 
   std::ifstream file;
   file.open(name);
 
-  for (std::string line; std::getline(file, line); ) {
+  for (std::string line; std::getline(file, line);) {
     lines.emplace_back(line);
   }
 
@@ -30,9 +24,11 @@ std::vector<std::string> read_file(const std::string& name) {
 }
 
 int calculate_column_padding(const std::string& title, const std::vector<std::string>& values) {
-  const std::string& max_size_string = *std::max_element(values.begin(), values.end(), [](const std::string& s1, const std::string& s2) {
-    return s1.size() < s2.size();
-  });
+  const std::string& max_size_string = *std::max_element(values.begin(), values.end(),
+                                                         [](const std::string& s1,
+                                                            const std::string& s2) {
+                                                           return s1.size() < s2.size();
+                                                         });
 
   if (max_size_string.size() > title.size()) {
     return max_size_string.size() + 1;
@@ -82,9 +78,10 @@ std::vector<std::string> get_initials(const std::vector<std::string>& data) {
   const std::vector<std::string> first_names = get_data_index(data, 0);
   std::vector<std::string> output(first_names.size());
 
-  std::transform(first_names.begin(), first_names.end(), output.begin(), [](const std::string& string) {
-    return std::string(1, string[0]) + ".";
-  });
+  std::transform(first_names.begin(), first_names.end(), output.begin(),
+                 [](const std::string& string) {
+                   return std::string(1, string[0]) + ".";
+                 });
 
   return output;
 }
@@ -116,23 +113,17 @@ void run_primer_7() {
   const int salary_column_padding = calculate_column_padding("Salary", salaries);
 
   const Separator column_separator = with("    ");
-  print(concat(column_separator,
-               pad("Initial", initial_column_padding),
-               pad("Last", last_column_padding),
-               pad("Salary", salary_column_padding)));
-  print(concat(column_separator,
-               std::string(initial_column_padding, '-'),
-               std::string(last_column_padding, '-'),
-               std::string(salary_column_padding, '-')));
+  print(concat(column_separator, pad("Initial", initial_column_padding),
+               pad("Last", last_column_padding), pad("Salary", salary_column_padding)));
+  print(concat(column_separator, std::string(initial_column_padding, '-'),
+               std::string(last_column_padding, '-'), std::string(salary_column_padding, '-')));
   for (int index = 0; index < lines.size(); ++index) {
     const std::string& initial = initials.at(index);
     const std::string& last_name = last_names.at(index);
     const std::string& salary = salaries.at(index);
 
-    print(concat(column_separator,
-                 pad(initial, initial_column_padding),
-                 pad(last_name, last_column_padding),
-                 pad(salary, salary_column_padding)));
+    print(concat(column_separator, pad(initial, initial_column_padding),
+                 pad(last_name, last_column_padding), pad(salary, salary_column_padding)));
   }
 }
 
@@ -152,7 +143,7 @@ const std::map<std::string, ContactRecord>& get_records() {
     const std::vector<std::string> lines = read_file("contact-records");
     for (const std::string& line : lines) {
       const std::vector<std::string> values = split_string(line, ',');
-      ContactRecord record{ values[0], values[1] };
+      ContactRecord record{values[0], values[1]};
 
       records.insert(std::make_pair(record.name, record));
       records.insert(std::make_pair(record.phone, record));
@@ -183,10 +174,7 @@ bool try_find_phone(const std::string& search_string, ContactRecord* record) {
 
 void run_primer_8() {
   const std::string search_string = read_search_string();
-  print(concat(with(" "),
-               "Searching",
-               std::to_string(get_records().size() / 2),
-               "records ..."));
+  print(concat(with(" "), "Searching", std::to_string(get_records().size() / 2), "records ..."));
 
   ContactRecord record;
 
@@ -198,10 +186,7 @@ void run_primer_8() {
   print_empty_line();
   if (found) {
     print("Contact details:");
-    print(concat(Separator::EMPTY,
-                 record.name,
-                 ", T: ",
-                 record.phone));
+    print(concat(iolib::no_separator, record.name, ", T: ", record.phone));
   } else {
     print("Sorry, no contact details found");
   }
@@ -221,7 +206,7 @@ public:
     const std::vector<std::string> lines = read_file("credentials");
     for (const std::string& line : lines) {
       const std::vector<std::string> values = split_string(line, ',');
-      credentials.insert(std::make_pair(values[0], User{ values[0], values[1], values[2] }));
+      credentials.insert(std::make_pair(values[0], User{values[0], values[1], values[2]}));
     }
   }
 
@@ -237,10 +222,11 @@ public:
 
     std::vector<std::string> lines(credentials.size());
 
-    std::transform(credentials.begin(), credentials.end(), lines.begin(), [](const std::pair<std::string, User> pair) {
-      const User& user = pair.second;
-      return concat(with(","), user.username, user.password, user.name);
-    });
+    std::transform(credentials.begin(), credentials.end(), lines.begin(),
+                   [](const std::pair<std::string, User> pair) {
+                     const User& user = pair.second;
+                     return concat(with(","), user.username, user.password, user.name);
+                   });
 
     save_file("credentials", lines);
   }
@@ -250,7 +236,9 @@ private:
 };
 
 std::string read_update_password_choice() {
-  return read_regex_matching_string_with_prompt("Would you like to update your passwith with a randomly generated one (Y/N)?", YES_NO_REGEX);
+  return read_regex_matching_string_with_prompt("Would you like to update your password with with"
+                                                " a randomly generated one (Y/N)?",
+                                                std::regex("^Y|N|y|n$"));
 }
 
 std::string generate_random_password() {
@@ -274,9 +262,7 @@ void run_primer_9() {
   if (update_password == "Y") {
     const std::string random_password = generate_random_password();
     fileCredentialStore.update(username, random_password);
-    print(concat(with(" "),
-                 "Your new password is",
-                 random_password));
+    print(concat(with(" "), "Your new password is", random_password));
   } else {
     print("Okay, bye.");
   }
