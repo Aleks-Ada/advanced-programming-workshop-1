@@ -1,2 +1,2 @@
 language = "cpp"
-run = "clang++ -Wall -std=c++17 -lpthread primers/*.cc -o main && ./main"
+run = "clang++ -Wall -std=c++17 -pthread primers/*.cc -o main && ./main"
