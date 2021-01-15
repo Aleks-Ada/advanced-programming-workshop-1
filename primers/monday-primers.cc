@@ -4,22 +4,13 @@
 #include <regex>
 
 #include "io-lib.h"
+#include "random.h"
 
-const std::regex SIMPLE_SENTENCE_REGEX = std::regex("^[.,&!?\()\\/';:A-Za-z -]+$");
+const std::regex SIMPLE_SENTENCE_REGEX = std::regex("^[.,&!?\\()\\/';:A-Za-z -]+$");
 const std::regex NUMBER_REGEX = std::regex("\\d+");
 const std::regex NUMERIC_REGEX = std::regex("\\d");
 const std::regex ALPHABETIC_REGEX = std::regex("[A-Za-z]");
 const std::regex YES_NO_REGEX = std::regex("^Y|N|y|n$");
-
-std::string read_starting_temperature() {
-  const std::regex TEMPERATURE_REGEX = std::regex("^\\d+.*\\d+$");
-  return read_regex_matching_string_with_prompt("Please enter the starting temperature:", TEMPERATURE_REGEX);
-}
-
-std::string read_temperature_conversion_choice() {
-  const std::regex C_OR_F_REGEX = std::regex("^C|F|c|f$");
-  return read_regex_matching_string_with_prompt("Your choice:", C_OR_F_REGEX);
-}
 
 std::string read_quote() {
   return read_regex_matching_string_with_prompt("What is the quote?", SIMPLE_SENTENCE_REGEX);
@@ -44,10 +35,6 @@ void run_primer_1() {
 std::string read_difficulty_level() {
   const std::regex DIFFICULTY_LEVEL_REGEX = std::regex("^1|2|3$");
   return read_regex_matching_string_with_prompt("Please pick a difficulty level (1, 2, or 3):", DIFFICULTY_LEVEL_REGEX);
-}
-
-int pick_random_number(const int low, const int high) {
-  return low + (std::rand() % (high - low + 1));
 }
 
 std::string read_guess(const std::string& prompt) {
