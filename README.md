@@ -8,7 +8,7 @@ In addition, I have made three helper libraries:
 2. `credentials-lib.h/cc` contains shared code for authenticating users from a file or in-memory
 3. `random.h/cc` contains a random number generator function
 
-Furthermore, I have the data files for Wednesday's exercises:
+Furthermore, I have the data files for Wednesday's exercises in the top-level directory:
 - `contact-records` stores a list of universities and their phone numbers
 - `credentials` stores the users' login details
 - `data-file-parser` stores people's salaries
