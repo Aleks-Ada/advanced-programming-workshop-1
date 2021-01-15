@@ -1,7 +1,10 @@
 #include "random.h"
 
-#include <cstdlib>
+#include <random>
+
+std::mt19937 random_number_generator((std::random_device())());
 
 int pick_random_number(const int low, const int high) {
-  return low + (std::rand() % (high - low + 1));
+  std::uniform_int_distribution<int> dist(low, high);
+  return dist(random_number_generator);
 }

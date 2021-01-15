@@ -136,7 +136,7 @@ void run_primer_6() {
       "Cale Myers"
   };
 
-  print(concat(with(" "),
+  print(concat(iolib::with_space,
                "There are",
                std::to_string(size_of_names),
                "employees:"));
@@ -146,7 +146,7 @@ void run_primer_6() {
   const std::string name_to_remove = read_name_to_remove();
 
   print_empty_line();
-  print(concat(with(" "),
+  print(concat(iolib::with_space,
                "There are",
                std::to_string(size_of_names - 1),
                "employees:"));

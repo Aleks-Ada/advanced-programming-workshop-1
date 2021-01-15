@@ -24,7 +24,7 @@ void practice_exercise_1() {
   const std::string author = read_author();
 
   print_empty_line();
-  print(concat(with(" "), author, "says:", concat(iolib::no_separator, "\"", quote, "\"")));
+  print(concat(iolib::with_space, author, "says:", concat(iolib::no_separator, "\"", quote, "\"")));
 }
 
 void run_primer_1() {
@@ -62,7 +62,7 @@ void run_primer_2() {
     }
 
     print_empty_line();
-    print(concat(with(" "),
+    print(concat(iolib::with_space,
       "Great, I have randomly picked a number in the range 1 -",
       std::to_string(range_high)));
 
@@ -101,7 +101,7 @@ void run_primer_2() {
     } else {
       print("Better luck next time!");
     }
-    print(concat(with(" "),
+    print(concat(iolib::with_space,
       "The number was",
       std::to_string(target_random_number),
       "- you got it in",
@@ -118,14 +118,14 @@ void run_primer_2() {
 }
 
 std::string read_quantity(const std::string& item_string) {
-  return read_regex_matching_string_with_prompt(concat(with(" "),
+  return read_regex_matching_string_with_prompt(concat(iolib::with_space,
     "Please enter a quantity for item",
     item_string,
     "(or 0 to finish):"), std::regex("^\\d+$"));
 }
 
 std::string read_cost(const std::string& item_string) {
-  return read_regex_matching_string_with_prompt(concat(with(" "),
+  return read_regex_matching_string_with_prompt(concat(iolib::with_space,
     "Please enter item",
     item_string,
     "cost:"), std::regex("^\\d+.\\d{2}$"));

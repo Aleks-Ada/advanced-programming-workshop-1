@@ -174,7 +174,7 @@ bool try_find_phone(const std::string& search_string, ContactRecord* record) {
 
 void run_primer_8() {
   const std::string search_string = read_search_string();
-  print(concat(with(" "), "Searching", std::to_string(get_records().size() / 2), "records ..."));
+  print(concat(iolib::with_space, "Searching", std::to_string(get_records().size() / 2), "records ..."));
 
   ContactRecord record;
 
@@ -262,7 +262,7 @@ void run_primer_9() {
   if (update_password == "Y") {
     const std::string random_password = generate_random_password();
     fileCredentialStore.update(username, random_password);
-    print(concat(with(" "), "Your new password is", random_password));
+    print(concat(iolib::with_space, "Your new password is", random_password));
   } else {
     print("Okay, bye.");
   }

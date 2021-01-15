@@ -31,7 +31,7 @@ std::string run_password_validator(const CredentialStore& credentials) {
   print_empty_line();
 
   if (authenticates(credentials, username, password)) {
-    print(concat(with(" "),
+    print(concat(iolib::with_space,
                  "Welcome",
                  get_name(credentials, username)));
   } else {
