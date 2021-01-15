@@ -1,10 +1,10 @@
-# Advanced Programming - Workshop 1
+# Advanced Programming - Primers Portfolio
 All primer-related code is located within the primers/ directory.
 
 Each weekday's primers are located in their own source and header files.
 
 In addition, I have made three helper libraries:
-1. `io-lib.h/cc `contains shared console input/output operations
+1. `io-lib.h/cc` contains shared console input/output operations
 2. `credentials-lib.h/cc` contains shared code for authenticating users from a file or in-memory
 3. `random.h/cc` contains a random number generator function
 
