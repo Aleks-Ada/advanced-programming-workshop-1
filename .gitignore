@@ -1,7 +1,5 @@
-# Files without extensions
-*
-!/**/
-!*.*
+# Files beginning with dot
+.*
 
 # Prerequisites
 *.d
